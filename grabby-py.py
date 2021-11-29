@@ -39,18 +39,29 @@ def ImageDwnLoop(strFilename, charDelim):
 def PrintDwnLoop(strFilename, charDelim):
     file1 = open(strFilename, 'r')
     Lines = file1.readlines()
+    listImages = [];
+    listAllImages = [];
 
     for line in Lines:
-        listImages = str(line).split(charDelim) # char to split images
-
-    listShort = [listImages[0], listImages[1], listImages[2]]
-
-    for s in listShort:
-        print(s)
+        listImages =  str(line).split(charDelim) # char to split images
+        
+        for s in listImages:
+            listAllImages.append(s)
+            
+    count=1
+    for strTemp in listAllImages:
+        if(count < 6):
+            print ("Item " + str(count) + ": " + strTemp)
+            count +=1
 
 def SetDestination(strDirectory):
     if not os.path.exists(strDirectory):
-        os.makedirs(strDirectory)
+        inputDir = input('\"' + strDirectory + '\" not found, create a new directory? (type y or n):')
+        if(inputDir == "y" or inputDir == "Y"):
+            os.makedirs(strDirectory)
+        else:
+            return False
+    return True
 
 def checkInputFile(inputFile):
     file_exists = os.path.exists(inputFile)
@@ -81,6 +92,16 @@ def startFunc(boolInputFound):
         inputContinue = input('Does this look correct? (type y or n):')
         if(inputContinue == "y" or inputContinue == "Y"):
             boolOutputReady = True
+    
+    boolReadyDownload = False
+    while(boolReadyDownload == False):
+        inputLoc = input('Output location:')
+        if(SetDestination(inputLoc)):
+            boolReadyDownload = True
+
+    inputDwn = input('Start Download? (type y or n):')
+    if(inputDwn == "y" or inputDwn == "Y"):
+        ImageDwnLoop(inputLoc, inputChar)
 
 boolInputFound = False
 startFunc(boolInputFound)
